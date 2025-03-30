@@ -1,5 +1,5 @@
 import { redirect, type Handle } from '@sveltejs/kit';
-import { authController, type DecodedToken } from '$lib/server/controllers/authController';
+import { authController, type StudentTokenPayload } from '$lib/server/controllers/authController';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const token = event.cookies.get('authToken');
@@ -7,7 +7,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	if (token) {
 		try {
-			const localUser: DecodedToken = await auth.getLocalStudentDetails(token);
+			const localUser = (await auth.getLocalStudentDetails(token)) as StudentTokenPayload;
 			event.locals.user = localUser;
 		} catch (err) {
 			event.cookies.delete('authToken', { path: '/' });
@@ -22,6 +22,18 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (event.url.pathname.startsWith('/student') || event.url.pathname.startsWith('/admin')) {
 		if (!event.locals.user) {
 			throw redirect(302, '/');
+		}
+	}
+
+	if (event.url.pathname.startsWith('/admin')) {
+		if (event.locals.user?.role !== 'admin') {
+			throw redirect(302, '/student');
+		}
+	}
+
+	if (event.url.pathname.startsWith('/student')) {
+		if (event.locals.user?.role !== 'student') {
+			throw redirect(302, '/admin');
 		}
 	}
 

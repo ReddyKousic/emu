@@ -11,7 +11,9 @@ export const event = pgTable('event', {
 	eventType: eventTypeEnum('event_type').notNull(),
 	eventVenue: text('event_venue').notNull(),
 	studentManager: integer('student_manager').references(() => student.id),
-	eventDateTime: timestamp('event_date_time').notNull(),
+	eventStartDateTime: timestamp('event_start_date_time').notNull(),
+	eventEndDateTime: timestamp('event_end_date_time').notNull(),
+
 	limit: integer('limit').notNull().default(0),
 	universityAdministrationApproval: approvalStatusEnum('university_administration_approval')
 		.notNull()

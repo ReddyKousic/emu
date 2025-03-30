@@ -1,11 +1,21 @@
 import jwt from 'jsonwebtoken';
 import { student } from '../db/schema/student';
+import { universityAdministration } from '../db/schema/universityAdministration';
+
 import { db } from '../db';
 import { eq } from 'drizzle-orm';
 import { verifyPassword } from '$lib';
 
 const secretKey = process.env.JWT_SECRET || 'your-secret-key'; // Use an environment variable
 export interface StudentTokenPayload {
+	id: number;
+	email: string;
+	name: string;
+	role: string;
+	iat?: number;
+	exp?: number;
+}
+export interface AdminTokenPayload {
 	id: number;
 	email: string;
 	name: string;
@@ -49,6 +59,59 @@ export class authController {
 		} catch (error) {
 			console.error(error);
 			throw new Error(error instanceof Error ? error.message : String(error));
+		}
+	}
+
+	async administratorLogin(email: string, password: string) {
+		try {
+			// Fetch student record
+			const universityAdministrationRecord = await db
+				.select()
+				.from(universityAdministration)
+				.where(eq(universityAdministration.email, String(email)))
+				.limit(1);
+
+			// Check if universityAdministration exists
+			if (universityAdministrationRecord.length === 0) {
+				throw new Error('Invalid email or password');
+			}
+
+			// Verify password
+			const universityAdministrationPasswordHash = universityAdministrationRecord[0].password;
+			const passwordMatch = await verifyPassword(
+				String(password),
+				universityAdministrationPasswordHash
+			);
+
+			if (!passwordMatch) {
+				throw new Error('Invalid email or password');
+			}
+
+			// Generate JWT Token
+			const token = this.generateToken({
+				role: 'admin',
+				name: universityAdministrationRecord[0].name,
+				email,
+				id: universityAdministrationRecord[0].id
+			});
+
+			return { token }; // Return token
+		} catch (error) {
+			console.error(error);
+			throw new Error(error instanceof Error ? error.message : String(error));
+		}
+	}
+
+
+	async getLocalAdminDetails(token: string): Promise<AdminTokenPayload> {
+		try {
+			// Verify token
+			const AdminTokenPayload = this.verifyToken(token) as AdminTokenPayload;
+			console.log(AdminTokenPayload);
+			return AdminTokenPayload;
+		} catch (error) {
+			console.error(error);
+			throw new Error('Invalid token');
 		}
 	}
 

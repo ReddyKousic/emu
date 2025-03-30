@@ -9,7 +9,7 @@
 
 <div class="navbar bg-base-100 flex items-center justify-between px-4 shadow-sm">
 	<div class="flex">
-		<a href="/{data.role}" class="flex items-center">
+		<a href="/admin" class="flex items-center">
 			<!-- <img src={CSILogo} class="w-12" alt="CSI Chapter Logo" /> -->
 
 			<h1 class="raleway text-4xl font-extrabold text-[#37474f]">Emu</h1>

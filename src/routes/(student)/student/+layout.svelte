@@ -5,9 +5,9 @@
 
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
-    const isActive = (path: string) => {
-        return page.url.pathname.startsWith(path);
-    };
+	const isActive = (path: string) => {
+		return page.url.pathname.startsWith(path);
+	};
 </script>
 
 <div class="flex px-4 py-2">
@@ -22,10 +22,8 @@
 				>Profile</button
 			>
 		</a>
-		<a href="/{data.role}/logout">
-			<button class="btn btn-ghost {isActive(`/${data.role}/logout`) ? 'btn-active' : ''}"
-				>Logout</button
-			>
+		<a href="/logout">
+			<button class="btn btn-ghost {isActive(`/logout`) ? 'btn-active' : ''}">Logout</button>
 		</a>
 	</div>
 
