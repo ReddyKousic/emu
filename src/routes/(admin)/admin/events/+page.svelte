@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { LayoutData, PageData } from './$types';
+	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 
@@ -20,8 +20,6 @@
 		return date.toLocaleDateString(undefined, options);
 	}
 </script>
-
-{data.eventCount[0].count}
 
 <div class="overflow-x-auto p-4">
 	<table class="table">

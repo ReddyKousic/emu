@@ -1,25 +1,45 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import CSILogo from '$lib/assets/CSI.png';
 	import type { LayoutData } from './$types';
+	import { page } from '$app/state';
 
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
-	const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+
+	const isActive = (path: string) => {
+		return page.url.pathname === path || page.url.pathname.startsWith(path);
+	};
 </script>
 
-<div class="navbar bg-base-100 flex items-center justify-between px-4 shadow-sm">
-	<div class="flex">
-		<a href="/admin" class="flex items-center">
-			<!-- <img src={CSILogo} class="w-12" alt="CSI Chapter Logo" /> -->
-
-			<h1 class="raleway text-4xl font-extrabold text-[#37474f]">Emu</h1>
+<div class="flex px-4 py-2">
+	<div class="left border-base-300 flex flex-col items-start gap-1">
+		<a href="/{data.role}/events">
+			<button class="btn btn-ghost w-full {isActive(`/${data.role}/events`) ? 'btn-active' : ''}"
+				>All Events</button
+			>
+		</a>
+		<a href="/{data.role}/venues/all">
+			<button class="btn btn-ghost {isActive(`/${data.role}/venues`) ? 'btn-active' : ''}"
+				>Venues</button
+			>
+		</a>
+		<a href="/{data.role}/calendar">
+			<button class="btn btn-ghost {isActive(`/${data.role}/calendar`) ? 'btn-active' : ''}"
+				>Timetable</button
+			>
+		</a>
+		<a href="/logout">
+			<button class="btn btn-ghost {isActive(`/logout`) ? 'btn-active' : ''}">Logout</button>
 		</a>
 	</div>
 
-	<div class="flex flex-col items-end">
-		<p class="font-sans text-xl font-medium">{data.name}</p>
-		<p class="font-sans text-sm font-medium">{data.role ? capitalize(data.role) : ''}</p>
+	<div class="right flex-1">
+		{@render children()}
 	</div>
 </div>
 
-{@render children()}
+<style>
+	.left {
+		padding-right: 10px;
+		border-right: 1px solid #eeeeee;
+	}
+</style>

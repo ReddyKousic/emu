@@ -43,7 +43,7 @@
 						name="email"
 						minlength="5"
 						maxlength="128"
-						value={form?.email}
+						value={form?.email || "kousicreddy39@gmail.com"}
 						required
 					/>
 				</label>
@@ -60,6 +60,7 @@
 						name="password"
 						minlength="8"
 						maxlength="16"
+						value="kkkkkkkkkk"
 						required
 					/>
 				</label>

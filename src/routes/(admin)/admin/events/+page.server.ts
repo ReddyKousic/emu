@@ -10,6 +10,7 @@ export const load = (async () => {
 			id: event.id,
 			name: event.eventName,
 			startDateTime: event.eventStartDateTime,
+			endDateTime: event.eventEndDateTime,
 			venue: event.eventVenue,
 			studentId: student.id,
 			studentName: student.name,
@@ -18,7 +19,7 @@ export const load = (async () => {
 		.from(event)
 		.innerJoin(student, eq(event.studentManager, student.id));
 
-	const eventCount = await db.select({ count: count(event.id) }).from(event);	
+	const eventCount = await db.select({ count: count(event.id) }).from(event);
 
 	return {
 		allEventsAndStudents,

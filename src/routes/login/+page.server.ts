@@ -54,6 +54,6 @@ export const actions = {
 		}
 
 		// Redirect only if authentication is successful
-		throw redirect(303, '/admin');
+		throw redirect(303, '/admin/events');
 	}
 } satisfies Actions;
