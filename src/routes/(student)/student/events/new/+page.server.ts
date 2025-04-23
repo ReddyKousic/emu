@@ -43,7 +43,15 @@ export const actions = {
 			});
 		}
 
-		// save data to the database
+		const slug = `${Date.now().toString(36)}-${String(eventName)
+			.toLowerCase()
+			.replace(/\s+/g, '-')
+			.replace(/[^\w\-]+/g, '')
+			.replace(/\-\-+/g, '-')
+			.replace(/^-+/, '') 
+			.replace(/-+$/, '')}`;
+
+		
 
 		try {
 			const newEvent = await db
@@ -57,7 +65,8 @@ export const actions = {
 					limit: limit ? Number(limit) : 0,
 					studentManager: locals.user?.id,
 					universityAdministrationApproval: 'pending',
-					publishStatus: 'pending_publish'
+					publishStatus: 'pending_publish',
+					slug: slug
 				})
 				.returning();
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import { Globe, Ticket } from '@lucide/svelte';
+	import { Check, ChevronRight, Copy, Globe, Ticket } from '@lucide/svelte';
 	let { data }: { data: PageData } = $props();
 
 	function getEventDuration(start: Date, end: Date): string {
@@ -15,6 +15,15 @@
 		if (days > 0) return `${days}d ${hours}h`;
 		if (hours > 0) return `${hours}h ${minutes}m`;
 		return `${minutes}m`;
+	}
+	let copiedSlug: string | null = $state(null);
+
+	function copyLink(slug: string) {
+		const url = `${window.location.origin}/participate/${slug}`;
+		navigator.clipboard.writeText(url).then(() => {
+			copiedSlug = slug;
+			setTimeout(() => (copiedSlug = null), 800);
+		});
 	}
 </script>
 
@@ -51,12 +60,13 @@
 					<th>Duration</th>
 					<th>Status</th>
 					<th>Approval</th>
+					<th>Registratin Link</th>
 					<!-- <th>Actions</th> -->
 				</tr>
 			</thead>
 			<tbody>
 				{#each data.allEventsByStudent as event (event.id)}
-					<tr class="hover:bg-base-300">
+					<tr >
 						<td>{event.eventName}</td>
 						<td>
 							{#if event.eventType === 'open'}
@@ -97,15 +107,61 @@
 							{/if}
 						</td>
 
-						<!-- <td>
+						<td>
+							{#if event.universityAdministrationApproval === 'approved'}
+								<div class="relative flex items-center gap-2">
+									<span class="truncate-fade">{event.slug}</span>
+									<button onclick={() => copyLink(event.slug)}>
+										{#if copiedSlug === event.slug}
+											<Check size={18} />
+										{:else}
+											<Copy size={15} class="cursor-pointer" />
+										{/if}
+									</button>
+								</div>
+							{:else if event.universityAdministrationApproval === 'pending'}
+								<span>Pending Approval</span>
+							{:else if event.universityAdministrationApproval === 'rejected'}
+								<div class="tooltip tooltip-right cursor-pointer" data-tip={event.rejectionRemarks}>
+									<span class="badge badge-error">Rejected</span>
+								</div>
+							{/if}
+						</td>
+
+						<td>
 							<div class="flex gap-2">
-								<button class="btn btn-xs btn-outline">View</button>
-								<button class="btn btn-xs btn-outline btn-error">Delete</button>
+								{#if event.universityAdministrationApproval === 'approved'}
+									<a href="/student/events/{event.id}">
+										<button class="btn btn-xs btn-ghost"><ChevronRight /></button>
+									</a>
+								{:else}
+									<button class="btn btn-xs btn-ghost" disabled><ChevronRight /></button>
+								{/if}
 							</div>
-						</td> -->
+						</td>
 					</tr>
 				{/each}
 			</tbody>
 		</table>
 	</div>
 {/if}
+
+<style>
+	.truncate-fade {
+		position: relative;
+		max-width: 200px; /* Adjust based on your layout */
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.truncate-fade::after {
+		content: '';
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 2rem;
+		height: 100%;
+		background: linear-gradient(to left, white 0%, transparent 100%);
+	}
+</style>

@@ -17,16 +17,16 @@
 				>All Events</button
 			>
 		</a>
-		<a href="/{data.role}/venues/all">
+		<!-- <a href="/{data.role}/venues/all">
 			<button class="btn btn-ghost {isActive(`/${data.role}/venues`) ? 'btn-active' : ''}"
 				>Venues</button
 			>
-		</a>
-		<a href="/{data.role}/calendar">
+		</a> -->
+		<!-- <a href="/{data.role}/calendar">
 			<button class="btn btn-ghost {isActive(`/${data.role}/calendar`) ? 'btn-active' : ''}"
 				>Timetable</button
 			>
-		</a>
+		</a> -->
 		<a href="/logout">
 			<button class="btn btn-ghost {isActive(`/logout`) ? 'btn-active' : ''}">Logout</button>
 		</a>

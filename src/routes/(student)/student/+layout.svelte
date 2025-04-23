@@ -17,11 +17,11 @@
 				>Events</button
 			>
 		</a>
-		<a href="/{data.role}/profile">
+		<!-- <a href="/{data.role}/profile">
 			<button class="btn btn-ghost {isActive(`/${data.role}/profile`) ? 'btn-active' : ''}"
 				>Profile</button
 			>
-		</a>
+		</a> -->
 		<a href="/logout">
 			<button class="btn btn-ghost {isActive(`/logout`) ? 'btn-active' : ''}">Logout</button>
 		</a>

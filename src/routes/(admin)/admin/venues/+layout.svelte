@@ -18,12 +18,12 @@
 		</a>
 		<a href="/{data.role}/venues/new">
 			<button class="btn rounded-full {isActive(`/${data.role}/venues/new`) ? 'btn-active' : ''}"
-				>New Venue</button
+				>Venues</button
 			>
 		</a>
 		<a href="/{data.role}/venues/blocks/new">
 			<button class="btn rounded-full {isActive(`/${data.role}/venues/blocks/new`) ? 'btn-active' : ''}"
-				>New Block</button
+				>Blocks</button
 			>
 		</a>
 	</div>
