@@ -43,7 +43,7 @@
 						name="email"
 						minlength="5"
 						maxlength="128"
-						value={form?.email || "kousicreddy39@gmail.com"}
+						value={form?.email || 'kousicreddy39@gmail.com'}
 						required
 					/>
 				</label>
@@ -78,6 +78,13 @@
 					{/if}
 				</button>
 			</form>
+			<!-- YELLOW : #ffc727 -->
+			<!-- BLUE: #37474f -->
+			<div class="divider">or</div>
+
+			<button type="button" class="btn h-10 w-full rounded-2xl border-2 bg-[#37474f] text-white">
+				Login using VTOP
+			</button>
 
 			<div class="help py-4">
 				<p class="open-sans text-sm">

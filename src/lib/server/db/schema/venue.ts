@@ -16,9 +16,3 @@ export const venue = pgTable(
 	})
 );
 
-export const venueRelations = relations(venue, ({ one }) => ({
-	block: one(block, {
-		fields: [venue.block],
-		references: [block.id]
-	})
-}));

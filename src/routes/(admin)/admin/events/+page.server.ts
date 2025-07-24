@@ -9,15 +9,13 @@ export const load = (async () => {
 		.select({
 			id: event.id,
 			name: event.eventName,
-			startDateTime: event.eventStartDateTime,
-			endDateTime: event.eventEndDateTime,
-			venue: event.eventVenue,
+		
 			studentId: student.id,
 			studentName: student.name,
 			approval: event.universityAdministrationApproval
 		})
 		.from(event)
-		.innerJoin(student, eq(event.studentManager, student.id));
+		.innerJoin(student, eq(event.managedBy, student.id));
 
 	return {
 		allEventsAndStudents

@@ -1,6 +1,17 @@
-import { pgTable, serial, text, integer, timestamp, pgEnum, index } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	serial,
+	text,
+	integer,
+	timestamp,
+	pgEnum,
+	index,
+	boolean
+} from 'drizzle-orm/pg-core';
 import { student } from './student';
-import { sql } from 'drizzle-orm';
+import { universityAdministration } from './universityAdministration';
+import { relations } from 'drizzle-orm';
+import { bookings } from './bookings';
 
 export const eventTypeEnum = pgEnum('event_type', ['open', 'limited']);
 export const approvalStatusEnum = pgEnum('approval_status', ['pending', 'approved', 'rejected']);
@@ -12,17 +23,23 @@ export const event = pgTable(
 		id: serial('id').primaryKey(),
 		eventName: text('event_name').notNull(),
 		eventType: eventTypeEnum('event_type').notNull(),
-		eventVenue: text('event_venue').notNull(),
-		studentManager: integer('student_manager').references(() => student.id),
-		eventStartDateTime: timestamp('event_start_date_time').notNull(),
-		eventEndDateTime: timestamp('event_end_date_time').notNull(),
 
 		limit: integer('limit').notNull().default(0),
+
+		description: text('description').notNull(),
+
+		managedBy: integer('managed_by')
+			.references(() => student.id)
+			.notNull(),
+
 		universityAdministrationApproval: approvalStatusEnum('university_administration_approval')
 			.notNull()
 			.default('pending'),
 		publishStatus: publishStatusEnum('publish_status').notNull().default('pending_publish'),
 		rejectionRemarks: text('rejection_remarks'),
+		isOpenForBookingVenue: boolean('is_open_for_booking_venue').notNull().default(false),
+		eventApprovedBy: integer('event_approved_by').references(() => universityAdministration.id),
+		eventRejectedBy: integer('event_rejected_by').references(() => universityAdministration.id),
 		slug: text('slug').notNull().unique()
 	},
 	(table) => [index('slug_idx').on(table.slug)]

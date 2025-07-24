@@ -81,20 +81,19 @@
 		<thead>
 			<tr>
 				<th>Name</th>
-				<th>Date & Time</th>
-				<th>Venue</th>
 				<th>Student Manager</th>
 				<th>Status</th>
 				<!-- <th>Participants</th> -->
-				<th>Actions</th>
+				<!-- <th>Actions</th> -->
 			</tr>
 		</thead>
 		<tbody>
 			{#each data.allEventsAndStudents as event}
-				<tr class="">
+				<tr
+					class="cursor-pointer hover:bg-gray-100"
+					onclick={() => (window.location.href = `/admin/events/${event.id}`)}
+				>
 					<td>{event.id} - {event.name}</td>
-					<td>{formatDate(event.startDateTime)}</td>
-					<td>{event.venue}</td>
 					<td>{event.studentId} - {event.studentName}</td>
 					<td>
 						<span
@@ -114,7 +113,7 @@
 							0
 						{/if}
 					</td> -->
-					<td>
+					<!-- <td>
 						{#if event.approval === 'pending'}
 							<div class="flex gap-2">
 								<button
@@ -133,7 +132,7 @@
 						{:else}
 							<button class="btn btn-sm btn-disabled" disabled> Action Taken </button>
 						{/if}
-					</td>
+					</td> -->
 				</tr>
 			{/each}
 		</tbody>

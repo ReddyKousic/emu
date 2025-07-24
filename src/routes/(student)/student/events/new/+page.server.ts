@@ -1,11 +1,31 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { db } from '$lib/server/db';
-import { event } from '$lib/server/db/schema/event';
+import { event, publishStatusEnum } from '$lib/server/db/schema/event';
 
-export const load = (async () => {
-	return {};
-}) satisfies PageServerLoad;
+import { block, venue } from '$lib/server/db/schema'; // Your schema files
+
+// export const load = async () => {
+// 	// Query all blocks with their venues
+// 	const blocksWithVenues = await db.query.block.findMany({
+// 		with: {
+// 			venues: true // This will include all venues for each block
+// 		}
+// 	});
+
+// 	// Transform the data into your desired structure
+// 	const blocksGrouped = blocksWithVenues.reduce(
+// 		(acc, block) => {
+// 			acc[block.name] = block.venues; // Using block name as key
+// 			return acc;
+// 		},
+// 		{} as Record<string, any>
+// 	);
+
+// 	return {
+// 		blocks: blocksGrouped
+// 	};
+// };
 
 export const actions = {
 	default: async ({ request, cookies, locals }) => {
@@ -14,19 +34,15 @@ export const actions = {
 		const eventName = eventData.get('event_name');
 		const eventType = eventData.get('event_type');
 		const limit = eventData.get('event_limit');
+		const description = eventData.get('event_description');
 
-		const eventVenue = eventData.get('event_venue');
-		const eventStartDateTime = eventData.get('event_start_date_time');
-		const eventEndDateTime = eventData.get('event_end_date_time');
-
-		if (!eventName || !eventType || !eventVenue || !eventStartDateTime || !eventEndDateTime) {
+		if (!eventName || !eventType || !description) {
 			return fail(400, {
 				eventName,
 				eventType,
+				description,
 				limit,
-				eventVenue,
-				eventStartDateTime,
-				eventEndDateTime,
+
 				message: 'All fields are required'
 			});
 		}
@@ -36,9 +52,7 @@ export const actions = {
 				eventName,
 				eventType,
 				limit,
-				eventVenue,
-				eventStartDateTime,
-				eventEndDateTime,
+
 				message: 'Event limit is required for limited events'
 			});
 		}
@@ -48,10 +62,17 @@ export const actions = {
 			.replace(/\s+/g, '-')
 			.replace(/[^\w\-]+/g, '')
 			.replace(/\-\-+/g, '-')
-			.replace(/^-+/, '') 
+			.replace(/^-+/, '')
 			.replace(/-+$/, '')}`;
 
-		
+		if (!locals.user?.id) {
+			return fail(401, {
+				eventName,
+				eventType,
+				limit,
+				message: 'Authentication required'
+			});
+		}
 
 		try {
 			const newEvent = await db
@@ -59,13 +80,9 @@ export const actions = {
 				.values({
 					eventName: String(eventName),
 					eventType: eventType === 'limited' ? 'limited' : 'open',
-					eventVenue: String(eventVenue),
-					eventStartDateTime: new Date(String(eventStartDateTime)),
-					eventEndDateTime: new Date(String(eventEndDateTime)),
-					limit: limit ? Number(limit) : 0,
-					studentManager: locals.user?.id,
-					universityAdministrationApproval: 'pending',
-					publishStatus: 'pending_publish',
+					description: String(description),
+					limit: limit ? Number(limit) : -1,
+					managedBy: locals.user.id,
 					slug: slug
 				})
 				.returning();
@@ -77,9 +94,6 @@ export const actions = {
 				eventName,
 				eventType,
 				limit,
-				eventVenue,
-				eventStartDateTime,
-				eventEndDateTime,
 				message: 'Failed to create event'
 			});
 		}

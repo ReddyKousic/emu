@@ -55,9 +55,7 @@
 				<tr>
 					<th>Event Name</th>
 					<th>Type</th>
-					<th>Venue</th>
-					<th>Date & Time</th>
-					<th>Duration</th>
+
 					<th>Status</th>
 					<th>Approval</th>
 					<th>Registratin Link</th>
@@ -66,7 +64,7 @@
 			</thead>
 			<tbody>
 				{#each data.allEventsByStudent as event (event.id)}
-					<tr >
+					<tr>
 						<td>{event.eventName}</td>
 						<td>
 							{#if event.eventType === 'open'}
@@ -74,20 +72,6 @@
 							{:else}
 								<Ticket size={24} strokeWidth={1.5} />
 							{/if}
-						</td>
-						<td>{event.eventVenue}</td>
-						<td>
-							{new Date(event.eventStartDateTime).toLocaleDateString('en-US', {
-								year: 'numeric',
-								month: 'short',
-								day: 'numeric',
-								hour: '2-digit',
-								minute: '2-digit'
-							})}
-						</td>
-
-						<td>
-							{getEventDuration(event.eventStartDateTime, event.eventEndDateTime)}
 						</td>
 
 						<td>
@@ -108,7 +92,7 @@
 						</td>
 
 						<td>
-							{#if event.universityAdministrationApproval === 'approved'}
+							{#if event.universityAdministrationApproval === 'approved' && event.isOpenForBookingVenue}
 								<div class="relative flex items-center gap-2">
 									<span class="truncate-fade">{event.slug}</span>
 									<button onclick={() => copyLink(event.slug)}>

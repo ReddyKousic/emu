@@ -5,7 +5,7 @@ import { event } from '$lib/server/db/schema/event';
 import { eq } from 'drizzle-orm';
 import { approvalStatusEnum } from '$lib/server/db/schema/event';
 
-export const PATCH: RequestHandler = async ({ params, request }) => {
+export const PATCH: RequestHandler = async ({ params, request, locals }) => {
 	const { id } = params;
 	const eventId = id ? parseInt(id) : NaN;
 
@@ -26,6 +26,9 @@ export const PATCH: RequestHandler = async ({ params, request }) => {
 			.update(event)
 			.set({
 				universityAdministrationApproval: status,
+				eventApprovedBy: status === 'approved' ? locals.user?.id : null,
+				eventRejectedBy: status === 'rejected' ? locals.user?.id : null,
+				isOpenForBookingVenue: status === 'approved',
 				rejectionRemarks: rejectionRemarks || null
 			})
 			.where(eq(event.id, eventId))

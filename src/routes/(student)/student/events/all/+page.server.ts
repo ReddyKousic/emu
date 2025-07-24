@@ -6,7 +6,7 @@ export const load = (async ({ locals }) => {
 	const allEventsByStudent = await db
 		.select()
 		.from(event)
-		.where(eq(event.studentManager, Number(locals.user?.id)));
+		.where(eq(event.managedBy, Number(locals.user?.id)));
 
 	return { allEventsByStudent };
 }) satisfies PageServerLoad;

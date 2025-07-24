@@ -18,7 +18,7 @@ export const load = (async ({ params, locals }) => {
 	const eventDetails = await db
 		.select()
 		.from(event)
-		.where(and(eq(event.id, eventId), eq(event.studentManager, locals.user.id)));
+		.where(and(eq(event.id, eventId), eq(event.managedBy, locals.user.id)));
 
 	if (eventDetails.length === 0) {
 		throw redirect(302, '/student/events');

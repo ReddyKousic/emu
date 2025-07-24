@@ -8,6 +8,3 @@ export const block = pgTable('block', {
 	description: varchar('description', { length: 255 }).notNull(),
 	image: varchar('image', { length: 255 })
 });
-export const blockRelations = relations(block, ({ many }) => ({
-	venues: many(venue)
-}));

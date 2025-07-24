@@ -25,6 +25,10 @@
 		}
 		return true;
 	}
+
+	console.log('Data:', data.blocks);
+	let selectedBlockName = $state('');
+	let selectedVenueId = $state('');
 </script>
 
 <section class="flex flex-col px-2 py-4">
@@ -79,6 +83,11 @@
 			{/if}
 
 			<fieldset class="fieldset w-1/3">
+				<legend class="fieldset-legend">Description</legend>
+				<textarea name="event_description" class="textarea h-24 w-full" placeholder="Explain briefly about the event.." required></textarea>
+			</fieldset>
+
+			<!-- <fieldset class="fieldset w-1/3">
 				<legend class="fieldset-legend">Venue of the event?</legend>
 				<input
 					type="text"
@@ -87,38 +96,7 @@
 					placeholder="Eg. GDG Hackathon"
 					required
 				/>
-			</fieldset>
-		</div>
-
-		<div class="flex gap-2">
-			<fieldset class="fieldset w-1/3">
-				<legend class="fieldset-legend">Event starts at?</legend>
-				<input
-					type="datetime-local"
-					class="input w-full"
-					name="event_start_date_time"
-					placeholder="Eg. GDG Hackathon"
-					bind:value={event_start_date_time}
-					min={getCurrentISTDateTime()}
-					required
-				/>
-			</fieldset>
-
-			<fieldset class="fieldset w-1/3">
-				<legend class="fieldset-legend">Event ends at?</legend>
-				<input
-					type="datetime-local"
-					class="input w-full"
-					name="event_end_date_time"
-					placeholder="Eg. GDG Hackathon"
-					bind:value={event_end_date_time}
-					min={event_start_date_time || getCurrentISTDateTime()}
-					required
-				/>
-				{#if !validateDates()}
-					<p class="mt-1 text-sm text-red-500">End date and time must be later than the start.</p>
-				{/if}
-			</fieldset>
+			</fieldset> -->
 		</div>
 
 		<div class="flex gap-2">
