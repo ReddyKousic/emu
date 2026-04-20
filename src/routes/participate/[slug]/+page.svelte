@@ -78,26 +78,32 @@
 							<div class="flex items-center gap-2">
 								<Calendar class="h-5 w-5 text-blue-500" />
 								<span>
-									{new Date(data.eventDetails.eventStartDateTime).toLocaleDateString('en-US', {
-										weekday: 'long',
-										year: 'numeric',
-										month: 'long',
-										day: 'numeric'
-									})}
+									{data.approvedBooking 
+										? new Date(data.approvedBooking.bookingStartDateTime).toLocaleDateString('en-US', {
+											weekday: 'long',
+											year: 'numeric',
+											month: 'long',
+											day: 'numeric'
+										})
+										: 'Date TBD'}
 								</span>
 							</div>
 
 							<div class="flex items-center gap-2">
 								<Clock class="h-5 w-5 text-blue-500" />
 								<span>
-									{new Date(data.eventDetails.eventStartDateTime).toLocaleTimeString()} -
-									{new Date(data.eventDetails.eventEndDateTime).toLocaleTimeString()}
+									{#if data.approvedBooking}
+										{new Date(data.approvedBooking.bookingStartDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} -
+										{new Date(data.approvedBooking.bookingEndDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+									{:else}
+										Time TBD
+									{/if}
 								</span>
 							</div>
 
 							<div class="flex items-center gap-2">
 								<MapPin class="h-5 w-5 text-blue-500" />
-								<span>{data.eventDetails.eventVenue}</span>
+								<span>{data.approvedBooking?.venue?.name || 'Venue TBD'}</span>
 							</div>
 
 							{#if data.eventDetails.eventType === 'limited'}

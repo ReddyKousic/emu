@@ -39,7 +39,7 @@ export const PATCH: RequestHandler = async ({ params, request, locals }) => {
 			.set({
 				publishStatus: status
 			})
-			.where(and(eq(event.id, eventId), eq(event.studentManager, locals.user.id)))
+			.where(and(eq(event.id, eventId), eq(event.managedBy, locals.user.id)))
 			.returning();
 
 		if (updatedEvent.length === 0) {

@@ -26,7 +26,6 @@
 		return true;
 	}
 
-	console.log('Data:', data.blocks);
 	let selectedBlockName = $state('');
 	let selectedVenueId = $state('');
 </script>

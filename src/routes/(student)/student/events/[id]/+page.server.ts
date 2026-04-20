@@ -33,9 +33,26 @@ export const load = (async ({ params, locals }) => {
 
 	const participants = await db.select().from(participant).where(eq(participant.eventId, eventId));
 
+	// Fetch all venues for the proposal form
+	const venues = await db.query.venue.findMany({
+		with: {
+			block: true
+		}
+	});
+
+	// Fetch current bookings for this event (proposals and approved)
+	const eventBookings = await db.query.bookings.findMany({
+		where: (bookings, { eq }) => eq(bookings.eventId, eventId),
+		with: {
+			venue: true
+		}
+	});
+
 	return {
 		event: eventDetails[0],
 		participants: participants,
-		participantsCount: participantsCount[0].count
+		participantsCount: participantsCount[0].count,
+		venues,
+		eventBookings
 	};
 }) satisfies PageServerLoad;

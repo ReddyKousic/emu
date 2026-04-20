@@ -13,14 +13,25 @@ export const load = (async ({ params, request }) => {
 	}
 
 	// Fetch the event details from the database using the slug
+	const eventData = await db.query.event.findFirst({
+		where: (event, { eq }) => eq(event.slug, eventSlug),
+		with: {
+			bookings: {
+				where: (bookings, { eq }) => eq(bookings.bookingApprovalStatus, 'Approved'),
+				with: {
+					venue: true
+				}
+			}
+		}
+	});
 
-	const eventDetails = await db.select().from(event).where(eq(event.slug, eventSlug)).limit(1);
-	if (eventDetails.length === 0) {
+	if (!eventData) {
 		redirect(302, '/');
 	}
 
 	return {
-		eventDetails: eventDetails[0]
+		eventDetails: eventData,
+		approvedBooking: eventData.bookings[0] || null
 	};
 }) satisfies PageServerLoad;
 export const actions = {

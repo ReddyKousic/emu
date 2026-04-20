@@ -15,9 +15,10 @@ export const PATCH: RequestHandler = async ({ params, request, locals }) => {
 
     const data = await request.json();
     const { published } = data;
+    const status = published ? 'published' : 'pending_publish';
 
     // Validate the status
-    if (!publishStatusEnum.enumValues.includes(status)) {
+    if (!publishStatusEnum.enumValues.includes(status as any)) {
         return json({ error: 'Invalid approval status' }, { status: 400 });
     }
 
@@ -31,7 +32,7 @@ export const PATCH: RequestHandler = async ({ params, request, locals }) => {
             .set({
                 publishStatus: status
             })
-            .where(and(eq(event.id, eventId), eq(event.studentManager, locals.user.id)))
+            .where(and(eq(event.id, eventId), eq(event.managedBy, locals.user.id)))
             .returning();
 
         if (updatedEvent.length === 0) {
