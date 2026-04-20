@@ -39,11 +39,10 @@
 						type="email"
 						class="w-full grow focus:outline-none"
 						placeholder="Your Email"
-						autocomplete="off"
 						name="email"
 						minlength="5"
 						maxlength="128"
-						value={form?.email || 'kousicreddy39@gmail.com'}
+						value={form?.email || ''}
 						required
 					/>
 				</label>
@@ -56,11 +55,9 @@
 						type="password"
 						class="w-full grow focus:outline-none"
 						placeholder="Password"
-						autocomplete="new-password"
 						name="password"
 						minlength="8"
 						maxlength="16"
-						value="kkkkkkkkkk"
 						required
 					/>
 				</label>
