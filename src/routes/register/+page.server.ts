@@ -91,6 +91,6 @@ export const actions = {
 		}
 
 		// Place the redirect outside the try/catch block
-		throw redirect(303, '/manager');
+		throw redirect(303, '/student');
 	}
 } satisfies Actions;

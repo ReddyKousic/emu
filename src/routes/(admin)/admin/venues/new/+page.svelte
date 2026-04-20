@@ -94,7 +94,7 @@
 			<fieldset class="fieldset w-1/3">
 				<legend class="fieldset-legend">Block</legend>
 				<select class="select w-full" name="venue_block" required disabled={isLoading}>
-					<option value="">Independent Venue</option>
+					<option value="">Select Block</option>
 					{#each data?.blocksWithVenues as block}
 						<option value={block.id}>
 							{block.name}
@@ -125,8 +125,6 @@
 </section>
 
 <div class="container mx-auto px-4 py-8">
-
-
 	{#each data.blocksWithVenues as block}
 		<div class="mb-12">
 			<div class="mb-4 flex items-center gap-4">
