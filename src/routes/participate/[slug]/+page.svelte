@@ -78,13 +78,16 @@
 							<div class="flex items-center gap-2">
 								<Calendar class="h-5 w-5 text-blue-500" />
 								<span>
-									{data.approvedBooking 
-										? new Date(data.approvedBooking.bookingStartDateTime).toLocaleDateString('en-US', {
-											weekday: 'long',
-											year: 'numeric',
-											month: 'long',
-											day: 'numeric'
-										})
+									{data.approvedBooking
+										? new Date(data.approvedBooking.bookingStartDateTime).toLocaleDateString(
+												'en-US',
+												{
+													weekday: 'long',
+													year: 'numeric',
+													month: 'long',
+													day: 'numeric'
+												}
+											)
 										: 'Date TBD'}
 								</span>
 							</div>
@@ -93,8 +96,14 @@
 								<Clock class="h-5 w-5 text-blue-500" />
 								<span>
 									{#if data.approvedBooking}
-										{new Date(data.approvedBooking.bookingStartDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} -
-										{new Date(data.approvedBooking.bookingEndDateTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+										{new Date(data.approvedBooking.bookingStartDateTime).toLocaleTimeString([], {
+											hour: '2-digit',
+											minute: '2-digit'
+										})} -
+										{new Date(data.approvedBooking.bookingEndDateTime).toLocaleTimeString([], {
+											hour: '2-digit',
+											minute: '2-digit'
+										})}
 									{:else}
 										Time TBD
 									{/if}
@@ -109,7 +118,11 @@
 							{#if data.eventDetails.eventType === 'limited'}
 								<div class="flex items-center gap-2">
 									<User class="h-5 w-5 text-blue-500" />
-									<span>{data.eventDetails.limit} seats available</span>
+									<!-- <span>{data.eventDetails.limit} seats available</span> -->
+
+									<span>
+										{data.remainingSeats} / {data.eventDetails.limit} seats left
+									</span>
 								</div>
 							{/if}
 						</div>
@@ -163,6 +176,8 @@
 						</div>
 					</div>
 				</div>
+			{:else if data.eventDetails.eventType === 'limited' && data.remainingSeats === 0}
+				<div class="alert alert-error">Event is full. Registration closed.</div>
 			{:else}
 				<div class="card border-1 border-gray-200 bg-white">
 					<div class="card-body">
@@ -201,6 +216,8 @@
 									bind:value={formData.name}
 									name="full_name"
 									placeholder="John Doe"
+									minlength="3"
+									maxlength="256"
 									class="input input-bordered w-full"
 									required
 								/>
@@ -215,6 +232,8 @@
 									bind:value={formData.email}
 									placeholder="john@example.com"
 									name="email"
+									minlength="4"
+									maxlength="256"
 									class="input input-bordered w-full"
 									required
 								/>
@@ -229,6 +248,8 @@
 									bind:value={formData.phone}
 									placeholder="Eg. 9090990890"
 									name="phone"
+									maxlength="10"
+									minlength="10"
 									class="input input-bordered w-full"
 									required
 								/>

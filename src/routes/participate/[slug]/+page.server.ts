@@ -2,17 +2,16 @@ import { fail, redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import { event, participant } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 
-export const load = (async ({ params, request }) => {
+export const load = (async ({ params }) => {
 	const { slug } = params;
 	const eventSlug = slug ? String(slug) : '';
 
-	if (eventSlug === '') {
-		redirect(302, '/');
+	if (!eventSlug) {
+		throw redirect(302, '/');
 	}
 
-	// Fetch the event details from the database using the slug
 	const eventData = await db.query.event.findFirst({
 		where: (event, { eq }) => eq(event.slug, eventSlug),
 		with: {
@@ -26,12 +25,25 @@ export const load = (async ({ params, request }) => {
 	});
 
 	if (!eventData) {
-		redirect(302, '/');
+		throw redirect(302, '/');
 	}
+	const participantsCount = await db
+		.select({ count: sql<number>`count(*)` })
+		.from(participant)
+		.where(eq(participant.eventId, eventData.id));
+
+	const totalParticipants = Number(participantsCount[0].count);
+
+	const remainingSeats =
+		eventData.eventType === 'limited'
+			? Math.max(eventData.limit - totalParticipants, 0)
+			: null;
 
 	return {
 		eventDetails: eventData,
-		approvedBooking: eventData.bookings[0] || null
+		approvedBooking: eventData.bookings[0] || null,
+		totalParticipants,
+		remainingSeats
 	};
 }) satisfies PageServerLoad;
 export const actions = {
